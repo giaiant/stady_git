@@ -1,0 +1,39 @@
+{
+  "id": "branch-basics",
+  "title": "ブランチ基礎",
+  "steps": [
+    {
+      "goal": "feature/todo ブランチを作成して切り替える",
+      "checks": [
+        { "predicate": "currentBranchIs", "args": ["feature/todo"] }
+      ],
+      "hints": [
+        "git branch feature/todo",
+        "git checkout feature/todo"
+      ],
+      "explain": "ワークツリーは現在のブランチのスナップショットを反映します。"
+    },
+    {
+      "goal": "README.md に1行追記してコミットする（未コミットが残らないこと）",
+      "checks": [
+        { "predicate": "noUncommittedChanges", "args": [] }
+      ],
+      "hints": [
+        "README.md を編集後、git add README.md",
+        "git commit -m \"docs: update README\""
+      ],
+      "explain": "コミットはブランチ先端に積まれ、HEADが更新されます。"
+    },
+    {
+      "goal": "main ブランチに切り替えて feature/todo をマージする",
+      "checks": [
+        { "predicate": "isMerged", "args": ["main", "feature/todo"] }
+      ],
+      "hints": [
+        "git checkout main",
+        "git merge feature/todo"
+      ],
+      "explain": "Fast-forward と通常マージの違いに注目しましょう。"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "git-dojo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive CLI for learning Git via role-play scenarios",
+  "bin": {
+    "git-dojo": "bin/git-dojo.js"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "start": "node bin/git-dojo.js start",
+    "status": "node bin/git-dojo.js status",
+    "hint": "node bin/git-dojo.js hint",
+    "diagram": "node bin/git-dojo.js diagram"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.20",
+    "simple-git": "^3.27.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
