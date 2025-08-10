@@ -1,17 +1,29 @@
 const chalk = require('chalk').default;
-const { getWorkingTreeStatus, listAllFiles } = require('./git');
+const { 
+  getWorkingTreeStatus, 
+  listAllFiles, 
+  getAllBranches, 
+  getCommitsForBranch, 
+  getFilesInBranch, 
+  compareBranches,
+  getMergePreview 
+} = require('./git');
 
 async function showWorkingTreeVisualization() {
   const status = await getWorkingTreeStatus();
   const allFiles = await listAllFiles();
+  const branches = await getAllBranches();
   
   console.log(chalk.cyan('📁 ワークツリーの現在状態:'));
   console.log(chalk.yellow(`🌿 現在のブランチ: ${status.currentBranch}`));
   console.log(chalk.gray(`📂 監視中のディレクトリ: ${require('./sandbox').getSandboxPath()}/repo`));
   console.log('');
   
-  // ファイル一覧と状態
-  console.log(chalk.cyan('📄 ファイル一覧と状態:'));
+  // 全ブランチの概要表示
+  await showAllBranchesOverview();
+  
+  // 現在のワークツリーのファイル状態
+  console.log(chalk.cyan(`📄 現在のワークツリー（${status.currentBranch}ブランチ）のファイル状態:`));
   
   if (allFiles.length === 0) {
     console.log(chalk.gray('  （ファイルがありません）'));
@@ -56,6 +68,95 @@ async function showWorkingTreeVisualization() {
   console.log(`  • ファイルを編集すると、ワークツリーが変更されます`);
   console.log(`  • git add でステージングエリアに追加されます`);
   console.log(`  • git commit で "${status.currentBranch}" ブランチに保存されます`);
+  console.log('');
+}
+
+async function showAllBranchesOverview() {
+  const branches = await getAllBranches();
+  
+  console.log(chalk.cyan('🌳 全ブランチの概要:'));
+  
+  for (const branch of branches.all) {
+    const isCurrent = branch === branches.current;
+    const icon = isCurrent ? '👉' : '  ';
+    const color = isCurrent ? chalk.yellow : chalk.gray;
+    
+    // 各ブランチのファイル一覧とコミット履歴を取得
+    const files = await getFilesInBranch(branch);
+    const commits = await getCommitsForBranch(branch, 3);
+    
+    console.log(`${icon} ${color(branch)} ${isCurrent ? '(現在のブランチ)' : ''}`);
+    
+    // ファイル一覧
+    if (files.length > 0) {
+      console.log(chalk.gray(`     📄 ファイル: ${files.join(', ')}`));
+    } else {
+      console.log(chalk.gray('     📄 ファイル: なし'));
+    }
+    
+    // 最新コミット
+    if (commits.length > 0) {
+      const latestCommit = commits[0];
+      console.log(chalk.gray(`     💾 最新: ${latestCommit.hash} ${latestCommit.message}`));
+    }
+    
+    console.log('');
+  }
+}
+
+async function showMergePreview(baseBranch, targetBranch) {
+  console.log(chalk.cyan(`🔀 マージプレビュー: ${targetBranch} → ${baseBranch}`));
+  
+  const preview = await getMergePreview(baseBranch, targetBranch);
+  
+  if (!preview) {
+    console.log(chalk.red('マージプレビューを取得できませんでした'));
+    return;
+  }
+  
+  console.log('');
+  console.log(chalk.yellow('📋 マージされる内容:'));
+  
+  if (preview.changes.length === 0) {
+    console.log(chalk.gray('  変更はありません（既にマージ済みまたは同じ内容）'));
+  } else {
+    for (const change of preview.changes) {
+      let icon = '📝';
+      let color = chalk.yellow;
+      
+      switch (change.status) {
+        case 'A':
+          icon = '🆕';
+          color = chalk.green;
+          break;
+        case 'D':
+          icon = '🗑️';
+          color = chalk.red;
+          break;
+        case 'M':
+          icon = '📝';
+          color = chalk.yellow;
+          break;
+      }
+      
+      console.log(`  ${icon} ${color(change.file)} (${change.description})`);
+    }
+  }
+  
+  console.log('');
+  
+  if (preview.targetCommits.length > 0) {
+    console.log(chalk.cyan(`📦 ${targetBranch} の独自コミット:`));
+    for (const commit of preview.targetCommits) {
+      console.log(chalk.gray(`  • ${commit}`));
+    }
+    console.log('');
+  }
+  
+  console.log(chalk.blue('💡 マージ後の結果:'));
+  console.log(`  • ${targetBranch} の変更が ${baseBranch} に統合されます`);
+  console.log(`  • ${baseBranch} ブランチが最新状態になります`);
+  console.log(`  • ワークツリーが統合後の内容に更新されます`);
   console.log('');
 }
 
@@ -118,6 +219,8 @@ function explainCurrentOperation(operation, context = {}) {
 
 module.exports = { 
   showWorkingTreeVisualization, 
+  showAllBranchesOverview,
+  showMergePreview,
   showBranchSwitchPreview, 
   explainCurrentOperation 
 };

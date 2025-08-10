@@ -8,7 +8,7 @@ const { showStatus } = require('../lib/status');
 const { showHint } = require('../lib/hint');
 const { showDiagram } = require('../lib/diagram');
 const { startScenario } = require('../lib/start');
-const { showWorkingTreeVisualization, explainCurrentOperation } = require('../lib/visualize');
+const { showWorkingTreeVisualization, showMergePreview, explainCurrentOperation } = require('../lib/visualize');
 
 const program = new Command();
 program
@@ -93,6 +93,29 @@ program
       explainCurrentOperation(opts.operation || 'general');
     } catch (e) {
       console.error(chalk.red('Failed to explain:'), e.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('merge-preview')
+  .description('Show what will happen when merging branches')
+  .option('-b, --base <branch>', 'Base branch (default: main)')
+  .option('-t, --target <branch>', 'Target branch to merge')
+  .action(async (opts) => {
+    try {
+      await ensureSandbox();
+      const baseBranch = opts.base || 'main';
+      const targetBranch = opts.target;
+      
+      if (!targetBranch) {
+        console.error(chalk.red('Error: Target branch is required. Use -t <branch>'));
+        process.exit(1);
+      }
+      
+      await showMergePreview(baseBranch, targetBranch);
+    } catch (e) {
+      console.error(chalk.red('Failed to show merge preview:'), e.message);
       process.exit(1);
     }
   });

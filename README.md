@@ -199,6 +199,9 @@ ls -la
    node bin/git-dojo.js explain -o branch_create
    node bin/git-dojo.js explain -o branch_switch
    node bin/git-dojo.js explain -o git_commit
+   
+   # マージプレビュー（何がマージされるか事前確認）
+   node bin/git-dojo.js merge-preview -t feature/todo
    ```
 
 5. **リセット（やり直し）**:
@@ -217,7 +220,9 @@ ls -la
 - **リセット**: どこからでも絶対パスで実行可能
 
 ### 新機能
+- 🌳 **全ブランチ概要**: 各ブランチのファイル状況とコミット履歴を一覧表示
 - 📁 **ワークツリー可視化**: ファイル状態とブランチとの関係を詳細表示
+- 🔀 **マージプレビュー**: マージ前に何が統合されるかを事前確認
 - 🔍 **詳細ステータス**: 未達成理由と次のステップを具体的に表示
 - 💡 **操作解説**: 各Git操作の意味と影響を段階的に説明
 - 📚 **学習まとめ**: シナリオ完了時に重要概念を整理

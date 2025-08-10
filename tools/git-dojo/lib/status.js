@@ -3,7 +3,7 @@ const path = require('path');
 const chalk = require('chalk').default;
 const { currentBranch, hasUncommittedChanges, isMerged } = require('./git');
 const { getSandboxPath } = require('./sandbox');
-const { showWorkingTreeVisualization } = require('./visualize');
+const { showWorkingTreeVisualization, showMergePreview } = require('./visualize');
 
 function loadScenario() {
   const metaPath = path.join(getSandboxPath(), 'meta.json');
@@ -59,6 +59,17 @@ async function showStatus() {
       console.log(chalk.white(`   ${index + 1}. ${hint}`));
     });
     console.log('');
+  }
+  
+  // マージステップの場合、マージプレビューを表示
+  const isMargeStep = step.checks && step.checks.some(check => check.predicate === 'isMerged');
+  if (isMargeStep && !await checkStep(step)) {
+    const mergeCheck = step.checks.find(check => check.predicate === 'isMerged');
+    if (mergeCheck && mergeCheck.args.length >= 2) {
+      const [baseBranch, targetBranch] = mergeCheck.args;
+      console.log(chalk.cyan('🔀 マージ前の状態確認:'));
+      await showMergePreview(baseBranch, targetBranch);
+    }
   }
   
   const ok = await checkStep(step);
