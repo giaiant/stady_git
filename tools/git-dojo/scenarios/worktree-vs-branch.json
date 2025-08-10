@@ -1,0 +1,147 @@
+{
+  "id": "worktree-vs-branch",
+  "title": "ワークツリーとブランチの違いを体験する",
+  "description": "実際のファイル操作を通じてワークツリーとブランチの概念の違いを理解します",
+  "learning_objectives": [
+    "ワークツリーは「実際のファイルがある場所」であることを理解する",
+    "ブランチは「コミット履歴の流れ」であることを理解する",
+    "ブランチ切り替え時にワークツリーの内容が変わることを体験する",
+    "同じファイルでもブランチによって内容が違うことを確認する"
+  ],
+  "initial_setup": {
+    "commands": [
+      "echo 'メインブランチの内容です' > main-file.txt",
+      "git add main-file.txt",
+      "git commit -m 'main: 初期ファイル作成'",
+      "echo '共通ファイルの初期内容' > shared-file.txt", 
+      "git add shared-file.txt",
+      "git commit -m 'main: 共通ファイル作成'"
+    ]
+  },
+  "steps": [
+    {
+      "id": "step1",
+      "title": "🔍 現在のワークツリーを観察",
+      "description": "まず、現在のワークツリー（実際のファイル）を確認しましょう",
+      "pre_explanation": "ワークツリーとは、あなたが実際にファイルを見たり編集したりできる「作業場所」です。現在mainブランチにいるので、mainブランチのファイルが見えているはずです。",
+      "goal": {
+        "type": "observation",
+        "description": "現在のファイル一覧とその内容を確認する"
+      },
+      "hints": [
+        "PowerShellで 'Get-ChildItem' または 'ls' でファイル一覧を確認",
+        "'Get-Content main-file.txt' でファイル内容を確認",
+        "'Get-Content shared-file.txt' でファイル内容を確認",
+        "これらのファイルは「ワークツリー」に実際に存在しています"
+      ],
+      "explanation": "ワークツリーで見えるファイル = 現在のブランチでコミットされたファイル"
+    },
+    {
+      "id": "step2", 
+      "title": "🌿 新しいブランチを作成（まだ切り替えない）",
+      "description": "新しいブランチを作成しますが、まだ切り替えません",
+      "pre_explanation": "ブランチは「コミット履歴の流れ」です。新しいブランチを作成しても、ワークツリーはまだ変化しません。",
+      "goal": {
+        "type": "git_command",
+        "commands": ["git branch feature/new-content"]
+      },
+      "hints": [
+        "git branch feature/new-content でブランチ作成",
+        "git branch でブランチ一覧を確認（*マークが現在のブランチ）",
+        "Get-ChildItem でファイル一覧を確認（まだ変化なし）"
+      ],
+      "explanation": "ブランチを作成しただけでは、ワークツリーは変化しません。ブランチは単なる「コミット履歴のポインタ」だからです。"
+    },
+    {
+      "id": "step3",
+      "title": "🔄 ブランチを切り替えてワークツリーの変化を観察",
+      "description": "新しいブランチに切り替えて、ワークツリーがどう変化するかを確認します",
+      "pre_explanation": "いよいよブランチを切り替えます。この時、ワークツリーの内容がどうなるか注意深く観察してください。",
+      "goal": {
+        "type": "git_command", 
+        "commands": ["git checkout feature/new-content"]
+      },
+      "hints": [
+        "切り替え前にファイル内容を確認: Get-Content shared-file.txt",
+        "git checkout feature/new-content でブランチ切り替え",
+        "切り替え後にファイル一覧と内容を確認",
+        "同じファイルでも内容は同じ？違う？"
+      ],
+      "explanation": "ブランチ切り替え直後は、元のブランチと同じコミット履歴を共有しているため、ワークツリーの内容は同じです。"
+    },
+    {
+      "id": "step4",
+      "title": "📝 新ブランチでファイルを編集",
+      "description": "新しいブランチで既存ファイルを編集し、新しいファイルも追加します",
+      "pre_explanation": "今度は新しいブランチで作業をします。ワークツリーのファイルを編集して、この変更が「どのブランチに属するか」を理解しましょう。",
+      "goal": {
+        "type": "file_operations",
+        "files": [
+          {"name": "shared-file.txt", "content": "共通ファイルの内容を新ブランチで変更しました", "action": "modify"},
+          {"name": "feature-file.txt", "content": "新機能ブランチ専用のファイルです", "action": "create"}
+        ]
+      },
+      "hints": [
+        "Add-Content -Path shared-file.txt -Value '新ブランチで追加した行'",
+        "echo '新機能ブランチ専用のファイルです' > feature-file.txt",
+        "Get-ChildItem でファイル一覧確認",
+        "Get-Content shared-file.txt で変更を確認"
+      ],
+      "explanation": "ワークツリーで行った編集は、まだコミットされていないので「どのブランチにも属さない」状態です。"
+    },
+    {
+      "id": "step5",
+      "title": "💾 変更をコミットしてブランチに記録",
+      "description": "ワークツリーの変更をコミットして、ブランチの履歴に記録します",
+      "pre_explanation": "ワークツリーでの変更を「ブランチの履歴」として記録します。この操作により、変更が特定のブランチに属することになります。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git add .",
+          "git commit -m 'feature: 共通ファイル更新と新ファイル追加'"
+        ]
+      },
+      "hints": [
+        "git status で変更状況を確認",
+        "git add . ですべての変更をステージング",
+        "git commit -m 'feature: 共通ファイル更新と新ファイル追加'"
+      ],
+      "explanation": "コミットにより、ワークツリーの変更が「feature/new-contentブランチの履歴」として記録されました。"
+    },
+    {
+      "id": "step6",
+      "title": "🔙 mainブランチに戻ってワークツリーの劇的変化を体験",
+      "description": "mainブランチに戻って、ワークツリーがどう変化するかを確認します",
+      "pre_explanation": "いよいよ、ワークツリーとブランチの違いが最も分かる瞬間です！mainブランチに切り替えた時、ワークツリーのファイルがどうなるでしょうか？",
+      "goal": {
+        "type": "git_command",
+        "commands": ["git checkout main"]
+      },
+      "hints": [
+        "切り替え前に現在のファイル一覧を確認: Get-ChildItem",
+        "切り替え前にshared-file.txtの内容確認: Get-Content shared-file.txt", 
+        "git checkout main でmainブランチに切り替え",
+        "切り替え後にファイル一覧と内容を確認してください！"
+      ],
+      "explanation": "ブランチ切り替えにより、ワークツリーが「mainブランチの最新コミット」の状態に戻りました。feature-file.txtが消え、shared-file.txtの内容も元に戻ったはずです。"
+    },
+    {
+      "id": "step7",
+      "title": "🔄 ブランチ間を行き来してワークツリーの変化を確認",
+      "description": "2つのブランチを切り替えながら、ワークツリーの変化を何度も確認します",
+      "pre_explanation": "最後に、ブランチとワークツリーの関係性を完全に理解するために、何度かブランチを切り替えてみましょう。",
+      "goal": {
+        "type": "observation",
+        "description": "ブランチ切り替え時のワークツリー変化パターンを理解する"
+      },
+      "hints": [
+        "git checkout feature/new-content → ファイル確認",
+        "git checkout main → ファイル確認", 
+        "この切り替えを何度か繰り返してください",
+        "同じファイル名でも、ブランチによって内容が違うことを確認"
+      ],
+      "explanation": "ワークツリーは常に「現在のブランチの最新コミット」を反映します。ブランチは複数の履歴を並行管理し、ワークツリーはその中の1つを表示する「窓」のような役割です。"
+    }
+  ],
+  "completion_message": "🎉 完了！ワークツリーとブランチの違いが理解できました！\n\n📚 学習のまとめ:\n• ワークツリー = 実際のファイルがある「作業場所」（1つだけ）\n• ブランチ = コミット履歴の「流れ」（複数並行可能）\n• ブランチ切り替え = ワークツリーの内容が変わる\n• 同じファイル名でも、ブランチによって内容が違う可能性がある\n\n🔑 重要ポイント:\nワークツリーは「現在のブランチの窓」として機能し、ブランチを切り替えると窓から見える景色（ファイル）が変わります！"
+}

@@ -17,6 +17,14 @@ function loadScenario() {
 }
 
 async function checkStep(step) {
+  const goal = step.goal;
+  
+  // 新しいゴール形式での確認
+  if (goal && typeof goal === 'object') {
+    return await checkGoal(goal);
+  }
+  
+  // 従来の checks 形式での確認
   for (const chk of (step.checks || [])) {
     const pred = chk.predicate;
     if (pred === 'currentBranchIs') {
@@ -36,6 +44,63 @@ async function checkStep(step) {
   return true;
 }
 
+async function checkGoal(goal) {
+  const sandboxRepo = path.join(getSandboxPath(), 'repo');
+  
+  // 観察タスクは常に成功（学習促進のため）
+  if (goal.type === 'observation') {
+    return true;
+  }
+  
+  // Gitコマンドの確認
+  if (goal.type === 'git_command') {
+    if (!goal.commands) return false;
+    
+    for (const cmd of goal.commands) {
+      if (cmd.startsWith('git branch ')) {
+        const branchName = cmd.split(' ')[2];
+        try {
+          const { execSync } = require('child_process');
+          const result = execSync('git branch', { cwd: sandboxRepo, encoding: 'utf-8' });
+          if (!result.includes(branchName)) return false;
+        } catch (e) {
+          return false;
+        }
+      } else if (cmd.startsWith('git checkout ')) {
+        const branchName = cmd.split(' ')[2];
+        const currentBr = await currentBranch();
+        if (currentBr !== branchName) return false;
+      } else if (cmd.startsWith('git add') || cmd.startsWith('git commit')) {
+        // コミット系コマンドは、uncommitted changesがないことで確認
+        const dirty = await hasUncommittedChanges();
+        if (cmd.includes('commit') && dirty) return false;
+      }
+    }
+    return true;
+  }
+  
+  // ファイル操作の確認
+  if (goal.type === 'file_operations') {
+    if (!goal.files) return false;
+    
+    for (const fileOp of goal.files) {
+      const filePath = path.join(sandboxRepo, fileOp.name);
+      
+      if (fileOp.action === 'create' || fileOp.action === 'modify') {
+        if (!fs.existsSync(filePath)) return false;
+        
+        if (fileOp.content) {
+          const content = fs.readFileSync(filePath, 'utf-8');
+          if (!content.includes(fileOp.content.trim())) return false;
+        }
+      }
+    }
+    return true;
+  }
+  
+  return false;
+}
+
 async function showStatus() {
   const { meta, scenario } = loadScenario();
   const step = scenario.steps[meta.stepIndex];
@@ -49,7 +114,9 @@ async function showStatus() {
   // ワークツリーの可視化を先に表示
   await showWorkingTreeVisualization();
   
-  console.log(chalk.cyan(`📋 現在の目標: ${step.goal}`));
+  // 目標表示
+  const goalText = typeof step.goal === 'object' ? step.goal.description : step.goal;
+  console.log(chalk.cyan(`📋 現在の目標: ${goalText}`));
   console.log('');
   
   // 目標達成のための具体的なステップを表示
@@ -73,10 +140,33 @@ async function showStatus() {
   }
   
   const ok = await checkStep(step);
+  
+  // 観察タスクの特別処理
+  if (step.goal && step.goal.type === 'observation') {
+    console.log(chalk.blue('🔍 観察タスク:'));
+    console.log(chalk.yellow(`   ${step.goal.description}`));
+    console.log('');
+    console.log(chalk.green('✔ 観察を完了したら、次のステップに進みます'));
+    if (step.explanation) {
+      console.log(chalk.cyan(`💡 ${step.explanation}`));
+    }
+    
+    // 観察タスクは自動的に次に進む
+    if (meta.stepIndex < scenario.steps.length - 1) {
+      meta.stepIndex += 1;
+      fs.writeFileSync(path.join(getSandboxPath(), 'meta.json'), JSON.stringify(meta, null, 2));
+      console.log('');
+      console.log(chalk.yellow('📝 次のステップに進みました！'));
+      console.log(chalk.gray('   もう一度 node bin/git-dojo.js status を実行してください'));
+    }
+    console.log('');
+    return;
+  }
+  
   if (ok) {
     console.log(chalk.green('✔ 達成しました！'));
-    if (step.explain) {
-      console.log(chalk.cyan(`💡 解説: ${step.explain}`));
+    if (step.explanation) {
+      console.log(chalk.cyan(`💡 ${step.explanation}`));
     }
     console.log('');
     
