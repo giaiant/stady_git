@@ -1,0 +1,269 @@
+{
+  "id": "conflict-resolution", 
+  "title": "マージコンフリクトの解決とチーム協調",
+  "description": "複数人での同時開発で発生するマージコンフリクトの解決方法を学びます",
+  "learning_objectives": [
+    "マージコンフリクトが発生する状況を理解する",
+    "コンフリクトファイルの読み方を学ぶ", 
+    "手動でのコンフリクト解決方法を習得する",
+    "コンフリクト解決後の適切な処理を学ぶ",
+    "コンフリクトを避けるベストプラクティスを理解する"
+  ],
+  "initial_setup": {
+    "commands": [
+      "echo \"# Shopping App\" > README.md",
+      "echo \"\" >> README.md",
+      "echo \"## Features\" >> README.md",
+      "echo \"- Product listing\" >> README.md", 
+      "echo \"- Shopping cart\" >> README.md",
+      "git add README.md",
+      "git commit -m \"docs: initial project documentation\"",
+      "echo \"const products = [];\" > products.js",
+      "echo \"\" >> products.js",
+      "echo \"function addProduct(product) {\" >> products.js",
+      "echo \"  products.push(product);\" >> products.js",
+      "echo \"}\" >> products.js",
+      "git add products.js", 
+      "git commit -m \"feat: add basic product management\""
+    ]
+  },
+  "steps": [
+    {
+      "id": "step1",
+      "title": "🚀 プロジェクトの初期状態確認",
+      "description": "ショッピングアプリプロジェクトの現在の状態を確認します",
+      "pre_explanation": "チーム開発のプロジェクトに参加したばかりの状況です。まず現在のプロジェクト状態を把握しましょう。",
+      "goal": {
+        "type": "observation",
+        "description": "プロジェクトファイルとGit履歴を確認する"
+      },
+      "hints": [
+        "Get-ChildItem でプロジェクトファイル確認",
+        "Get-Content README.md でドキュメント確認",
+        "Get-Content products.js でコード確認",
+        "git log --oneline でコミット履歴確認"
+      ],
+      "explanation": "基本的なショッピングアプリの土台が用意されています。これから複数の機能を並行開発します。"
+    },
+    {
+      "id": "step2",
+      "title": "🌿 あなたの担当機能ブランチを作成",
+      "description": "ショッピングカート機能の開発用ブランチを作成します",
+      "pre_explanation": "あなたはショッピングカート機能を担当することになりました。他のメンバーと作業が重ならないよう、専用ブランチで開発します。",
+      "goal": {
+        "type": "git_command",
+        "commands": ["git checkout -b feature/shopping-cart"]
+      },
+      "hints": [
+        "git checkout -b feature/shopping-cart でブランチ作成と切り替え",
+        "git branch で現在のブランチ確認"
+      ],
+      "explanation": "フィーチャーブランチを使うことで、他のメンバーの作業と独立して開発できます。"
+    },
+    {
+      "id": "step3",
+      "title": "🛒 ショッピングカート機能を実装",
+      "description": "ショッピングカート機能とREADMEの更新を行います",
+      "pre_explanation": "ショッピングカート機能を実装し、ドキュメントも更新します。この時、同じファイルを他のメンバーも編集している可能性があります。",
+      "goal": {
+        "type": "file_operations",
+        "files": [
+          {
+            "name": "cart.js",
+            "content": "const cart = [];\n\nfunction addToCart(productId, quantity = 1) {\n  const existingItem = cart.find(item => item.productId === productId);\n  if (existingItem) {\n    existingItem.quantity += quantity;\n  } else {\n    cart.push({ productId, quantity });\n  }\n}\n\nfunction removeFromCart(productId) {\n  const index = cart.findIndex(item => item.productId === productId);\n  if (index > -1) {\n    cart.splice(index, 1);\n  }\n}\n\nfunction getCartTotal() {\n  return cart.reduce((total, item) => total + item.quantity, 0);\n}\n\nmodule.exports = { addToCart, removeFromCart, getCartTotal };",
+            "action": "create"
+          },
+          {
+            "name": "README.md",
+            "content": "# Shopping App\n\n## Features\n- Product listing\n- Shopping cart (with add/remove functionality)\n- Cart total calculation\n\n## Shopping Cart API\n- `addToCart(productId, quantity)` - Add item to cart\n- `removeFromCart(productId)` - Remove item from cart\n- `getCartTotal()` - Get total items in cart",
+            "action": "modify"
+          }
+        ]
+      },
+      "hints": [
+        "cart.js ファイルを新規作成してショッピングカート機能を実装",
+        "README.md を更新してショッピングカートのドキュメントを追加",
+        "実装後は Get-Content でファイル内容を確認"
+      ],
+      "explanation": "ショッピングカートの基本機能（追加、削除、合計）を実装し、ドキュメントも更新しました。"
+    },
+    {
+      "id": "step4",
+      "title": "📝 ショッピングカート機能をコミット",
+      "description": "実装したショッピングカート機能をコミットします",
+      "pre_explanation": "実装が完了したので、変更をコミットしてGitで管理します。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git add .",
+          "git commit -m \"feat: implement shopping cart functionality\""
+        ]
+      },
+      "hints": [
+        "git add . ですべての変更をステージング",
+        "git commit -m \"feat: implement shopping cart functionality\"",
+        "git status で状態確認"
+      ],
+      "explanation": "ショッピングカート機能の実装が完了し、コミット履歴に記録されました。"
+    },
+    {
+      "id": "step5",
+      "title": "🔄 mainブランチで他のメンバーの作業をシミュレート",
+      "description": "他のメンバーが同じファイルを編集した状況を作成します",
+      "pre_explanation": "あなたが作業している間に、他のメンバーがREADME.mdファイルを編集してmainブランチにプッシュしました。この状況をシミュレートします。",
+      "goal": {
+        "type": "git_command",
+        "commands": ["git checkout main"]
+      },
+      "hints": [
+        "git checkout main でmainブランチに切り替え",
+        "切り替え後は Get-Content README.md で内容確認",
+        "あなたの変更は見えなくなります（正常）"
+      ],
+      "explanation": "mainブランチに戻ると、フィーチャーブランチでの変更は見えません。これから他のメンバーの変更をシミュレートします。"
+    },
+    {
+      "id": "step6",
+      "title": "👥 他のメンバーがREADMEを編集（シミュレート）",
+      "description": "他のメンバーが行った変更をシミュレートして、コンフリクトの発生条件を作ります",
+      "pre_explanation": "他のメンバーが支払い機能を追加し、READMEファイルも更新しました。これであなたの変更とコンフリクトが発生する状況になります。",
+      "goal": {
+        "type": "file_operations",
+        "files": [
+          {
+            "name": "payment.js", 
+            "content": "function processPayment(amount, cardInfo) {\n  // Simple payment processing simulation\n  if (amount > 0 && cardInfo.number && cardInfo.cvv) {\n    return {\n      success: true,\n      transactionId: 'TXN' + Date.now(),\n      amount: amount\n    };\n  }\n  return { success: false, error: 'Invalid payment information' };\n}\n\nmodule.exports = { processPayment };",
+            "action": "create"
+          },
+          {
+            "name": "README.md",
+            "content": "# Shopping App\n\n## Features\n- Product listing\n- Shopping cart\n- Secure payment processing\n- Order management\n\n## Payment API\n- `processPayment(amount, cardInfo)` - Process customer payment\n\n## Security\nAll payment information is handled securely with industry standards.",
+            "action": "modify"
+          }
+        ]
+      },
+      "hints": [
+        "payment.js ファイルを作成して支払い機能を実装", 
+        "README.md を更新（あなたの変更とは異なる内容で）",
+        "これで同じファイルに対して競合する変更が存在する状況になります"
+      ],
+      "explanation": "他のメンバーが支払い機能を追加し、READMEも独自に更新しました。この時点であなたの変更と競合しています。"
+    },
+    {
+      "id": "step7",
+      "title": "📝 他のメンバーの変更をコミット（シミュレート）",
+      "description": "他のメンバーの変更をmainブランチにコミットします",
+      "pre_explanation": "他のメンバーの変更をmainブランチにコミットします。これで、あなたのフィーチャーブランチとmainブランチで同じファイル（README.md）に異なる変更がある状態になります。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git add .",
+          "git commit -m \"feat: add payment processing functionality\""
+        ]
+      },
+      "hints": [
+        "git add . ですべての変更をステージング",
+        "git commit -m \"feat: add payment processing functionality\"",
+        "git log --oneline でコミット履歴確認"
+      ],
+      "explanation": "これで、あなたのブランチが分岐した後にmainブランチが更新され、同じファイルに競合する変更がある状況になりました。"
+    },
+    {
+      "id": "step8",
+      "title": "🔀 マージを試行してコンフリクトを発生させる",
+      "description": "フィーチャーブランチをマージしてコンフリクトを体験します",
+      "pre_explanation": "ショッピングカート機能の開発が完了したので、mainブランチにマージします。しかし、他のメンバーがREADME.mdを変更しているため、コンフリクトが発生します。",
+      "goal": {
+        "type": "git_command",
+        "commands": ["git merge feature/shopping-cart"]
+      },
+      "hints": [
+        "git merge feature/shopping-cart でマージを試行",
+        "コンフリクトが発生してマージが停止します",
+        "git status でコンフリクト状況を確認",
+        "これは正常な動作です - パニックしないでください！"
+      ],
+      "explanation": "コンフリクトが発生しました！これは複数人で開発する際によく起こる現象です。次のステップで解決方法を学びます。"
+    },
+    {
+      "id": "step9",
+      "title": "🔍 コンフリクトファイルの内容を確認",
+      "description": "コンフリクトが発生したファイルの内容を詳しく確認します",
+      "pre_explanation": "マージコンフリクトが発生したとき、Gitはファイルにコンフリクトマーカーを挿入します。これらのマーカーを理解することが解決の第一歩です。",
+      "goal": {
+        "type": "observation",
+        "description": "README.mdのコンフリクトマーカーを理解する"
+      },
+      "hints": [
+        "Get-Content README.md でコンフリクトファイルの内容確認",
+        "<<<<<<< HEAD は現在のブランチ（main）の変更",
+        ">>>>>>> feature/shopping-cart はマージしようとしているブランチの変更",
+        "======= は2つの変更の境界線"
+      ],
+      "explanation": "コンフリクトマーカー（<<<<<<<, =======, >>>>>>>）がGitによって自動挿入され、競合する変更箇所を示しています。"
+    },
+    {
+      "id": "step10",
+      "title": "✏️ コンフリクトを手動で解決",
+      "description": "両方の変更を取り入れてコンフリクトを解決します",
+      "pre_explanation": "コンフリクトを解決するには、どちらの変更を残すか、あるいは両方を組み合わせるかを決めて、コンフリクトマーカーを削除します。",
+      "goal": {
+        "type": "file_operations",
+        "files": [
+          {
+            "name": "README.md",
+            "content": "# Shopping App\n\n## Features\n- Product listing\n- Shopping cart (with add/remove functionality)\n- Secure payment processing\n- Cart total calculation\n- Order management\n\n## Shopping Cart API\n- `addToCart(productId, quantity)` - Add item to cart\n- `removeFromCart(productId)` - Remove item from cart\n- `getCartTotal()` - Get total items in cart\n\n## Payment API\n- `processPayment(amount, cardInfo)` - Process customer payment\n\n## Security\nAll payment information is handled securely with industry standards.",
+            "action": "modify"
+          }
+        ]
+      },
+      "hints": [
+        "両方の機能（ショッピングカートと支払い）を含むように編集",
+        "コンフリクトマーカー（<<<<<<<, =======, >>>>>>>）をすべて削除",
+        "論理的に整合性のある内容に統合",
+        "編集後は Get-Content README.md で内容確認"
+      ],
+      "explanation": "両方のチームの変更を適切に統合しました。ショッピングカートと支払い機能の両方が含まれています。"
+    },
+    {
+      "id": "step11",
+      "title": "✅ 解決したコンフリクトをマークしてコミット",
+      "description": "コンフリクト解決後、変更をステージングしてマージを完了します",
+      "pre_explanation": "コンフリクトを解決したら、ファイルをステージングしてマージコミットを作成します。これでマージが完了します。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git add README.md",
+          "git commit -m \"merge: resolve README conflict between cart and payment features\""
+        ]
+      },
+      "hints": [
+        "git add README.md で解決済みファイルをステージング",
+        "git commit でマージコミットを作成",
+        "マージコミットのメッセージで何を解決したかを明記",
+        "git status で最終状態確認"
+      ],
+      "explanation": "コンフリクトが解決され、マージが正常に完了しました。両方の機能が統合されています。"
+    },
+    {
+      "id": "step12",
+      "title": "🎯 マージ結果の確認と整理",
+      "description": "マージ完了後の状態を確認し、不要なブランチを削除します",
+      "pre_explanation": "マージが完了したので、最終的な状態を確認し、使用済みのフィーチャーブランチを削除してリポジトリを整理します。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git branch -d feature/shopping-cart"
+        ]
+      },
+      "hints": [
+        "Get-ChildItem でプロジェクトの全ファイル確認",
+        "git log --oneline --graph でマージ履歴確認",
+        "git branch -d feature/shopping-cart で使用済みブランチ削除",
+        "git status で最終状態確認"
+      ],
+      "explanation": "マージコンフリクトの解決が完了しました。ショッピングカートと支払い機能の両方が正常に統合されています。"
+    }
+  ],
+  "completion_message": "🎉 マージコンフリクト解決完了！\n\n📚 学習のまとめ:\n• マージコンフリクト = 同じファイルの同じ箇所を複数人が編集した時に発生\n• コンフリクトマーカー = Git が自動挿入する競合箇所の印（<<<<<<<, =======, >>>>>>>）\n• 解決方法 = 適切な内容に手動編集 → ステージング → コミット\n• マージコミット = コンフリクト解決後に作成される特別なコミット\n\n🔑 重要ポイント:\n• コンフリクトは悪いことではなく、チーム開発では自然に発生する\n• 慌てずに冷静にコンフリクトマーカーを確認する\n• 両方の変更を理解してから適切に統合する\n• 解決後は必ずテストして動作確認する\n\n🛡️ コンフリクト予防策:\n• 頻繁に main ブランチから最新変更を取得する（git pull）\n• 小さな変更を頻繁にコミットする\n• チーム内で作業箇所の調整をする\n• コードレビューで早期に問題を発見する\n\n🚀 これでチーム開発の基本スキルが身につきました！"
+}

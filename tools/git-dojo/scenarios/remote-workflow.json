@@ -1,0 +1,264 @@
+{
+  "id": "remote-workflow",
+  "title": "リモートリポジトリとチーム開発ワークフロー",
+  "description": "プル、プッシュ、プルリクエスト、マージを体験してチーム開発の流れを理解します",
+  "learning_objectives": [
+    "リモートリポジトリの概念と役割を理解する",
+    "プッシュとプルの違いと使い分けを学ぶ",
+    "フィーチャーブランチでの開発フローを体験する",
+    "マージコンフリクトの発生と解決を学ぶ",
+    "プルリクエスト（PR）の概念を理解する",
+    "チーム開発での協調作業の流れを体験する"
+  ],
+  "initial_setup": {
+    "commands": [
+      "echo \"# Team Project Repository\" > README.md",
+      "echo \"\" >> README.md",
+      "echo \"## Features\" >> README.md", 
+      "echo \"- [ ] User Authentication\" >> README.md",
+      "echo \"- [ ] Data Management\" >> README.md",
+      "echo \"- [ ] API Integration\" >> README.md",
+      "git add README.md",
+      "git commit -m \"docs: initial project setup\"",
+      "echo \"function login() {\" > auth.js",
+      "echo \"  // TODO: implement login\" >> auth.js",
+      "echo \"}\" >> auth.js",
+      "git add auth.js",
+      "git commit -m \"feat: add auth skeleton\"",
+      "git remote add origin https://github.com/dummy/team-project.git"
+    ]
+  },
+  "steps": [
+    {
+      "id": "step1",
+      "title": "🌐 リモートリポジトリの状態確認",
+      "description": "プロジェクトの現在の状態とリモートリポジトリとの関係を確認します",
+      "pre_explanation": "チーム開発では、ローカルリポジトリ（あなたのPC）とリモートリポジトリ（GitHubなど）が連携します。まず現在の状態を確認しましょう。",
+      "goal": {
+        "type": "observation",
+        "description": "ローカルとリモートの状態を確認し、チーム開発の出発点を理解する"
+      },
+      "hints": [
+        "git status でローカルの状態確認",
+        "git remote -v でリモートリポジトリ確認",
+        "git log --oneline でコミット履歴確認",
+        "Get-ChildItem でプロジェクトファイル確認"
+      ],
+      "explanation": "現在はローカルにのみコミットがあり、リモートにはまだプッシュされていない状態です。"
+    },
+    {
+      "id": "step2",
+      "title": "📤 初回プッシュでリモートとの連携開始",
+      "description": "ローカルの変更をリモートリポジトリにプッシュして、チーム開発の準備をします",
+      "pre_explanation": "ローカルで作成したコミットをリモートリポジトリに送信（プッシュ）することで、他のメンバーと共有できるようになります。",
+      "goal": {
+        "type": "git_command",
+        "commands": ["git push -u origin main"]
+      },
+      "hints": [
+        "git push -u origin main で初回プッシュ",
+        "-u オプションでアップストリームブランチを設定",
+        "プッシュ後は git status で状態確認"
+      ],
+      "explanation": "プッシュにより、ローカルの変更がリモートリポジトリに反映され、チームメンバーがアクセスできるようになりました。"
+    },
+    {
+      "id": "step3", 
+      "title": "🌿 フィーチャーブランチで新機能開発開始",
+      "description": "新機能開発用のブランチを作成し、チーム開発のベストプラクティスを実践します",
+      "pre_explanation": "チーム開発では、mainブランチで直接作業せず、機能ごとにフィーチャーブランチを作成します。これにより、複数人が同時に異なる機能を開発できます。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git checkout -b feature/user-authentication"
+        ]
+      },
+      "hints": [
+        "git checkout -b feature/user-authentication でブランチ作成と切り替えを同時実行",
+        "git branch で現在のブランチ確認",
+        "フィーチャーブランチ名は feature/機能名 が一般的"
+      ],
+      "explanation": "フィーチャーブランチを使うことで、メイン開発ラインを安定させながら新機能を開発できます。"
+    },
+    {
+      "id": "step4",
+      "title": "⚡ 新機能の実装とコミット",
+      "description": "ユーザー認証機能を実装し、変更をコミットします",
+      "pre_explanation": "フィーチャーブランチで実際の機能実装を行います。小さな変更を頻繁にコミットすることが推奨されます。",
+      "goal": {
+        "type": "file_operations",
+        "files": [
+          {
+            "name": "auth.js",
+            "content": "function login(username, password) {\n  if (username && password) {\n    return { success: true, user: username };\n  }\n  return { success: false, error: 'Invalid credentials' };\n}\n\nfunction logout() {\n  return { success: true };\n}\n\nmodule.exports = { login, logout };",
+            "action": "modify"
+          },
+          {
+            "name": "auth.test.js",
+            "content": "const { login, logout } = require('./auth');\n\ntest('login with valid credentials', () => {\n  const result = login('user', 'pass');\n  expect(result.success).toBe(true);\n});\n\ntest('logout', () => {\n  const result = logout();\n  expect(result.success).toBe(true);\n});",
+            "action": "create"
+          }
+        ]
+      },
+      "hints": [
+        "auth.js ファイルに実際のログイン機能を実装",
+        "echo や Add-Content でファイル内容を更新",
+        "新しくテストファイル auth.test.js も作成",
+        "実装後は Get-Content でファイル内容確認"
+      ],
+      "explanation": "実装とテストを同時に作成することで、品質の高いコードを維持できます。"
+    },
+    {
+      "id": "step5",
+      "title": "📝 変更をコミットして履歴に記録",
+      "description": "実装した機能をGitの履歴として記録します",
+      "pre_explanation": "実装が完了したら、論理的な単位でコミットします。コミットメッセージは他のメンバーが理解しやすいように書きます。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git add .",
+          "git commit -m \"feat: implement user authentication with tests\""
+        ]
+      },
+      "hints": [
+        "git add . ですべての変更をステージング",
+        "git status で変更内容を確認",
+        "git commit -m \"feat: implement user authentication with tests\"",
+        "コミットメッセージは \"type: description\" の形式で記述"
+      ],
+      "explanation": "明確なコミットメッセージにより、後から変更の目的や内容を理解しやすくなります。"
+    },
+    {
+      "id": "step6",
+      "title": "📤 フィーチャーブランチをリモートにプッシュ",
+      "description": "開発した機能をリモートリポジトリにプッシュして、チームと共有します",
+      "pre_explanation": "ローカルで開発した機能をリモートにプッシュすることで、コードレビューやプルリクエストの準備ができます。",
+      "goal": {
+        "type": "git_command",
+        "commands": ["git push origin feature/user-authentication"]
+      },
+      "hints": [
+        "git push origin feature/user-authentication でフィーチャーブランチをプッシュ",
+        "ブランチを初回プッシュする際は明示的にブランチ名を指定",
+        "プッシュ後は git status で状態確認"
+      ],
+      "explanation": "フィーチャーブランチのプッシュにより、他のメンバーがあなたの作業を確認し、フィードバックを提供できるようになります。"
+    },
+    {
+      "id": "step7",
+      "title": "🔄 mainブランチに戻って他の変更を取得",
+      "description": "他のメンバーの変更を想定して、mainブランチの更新を体験します",
+      "pre_explanation": "チーム開発では、あなたが作業している間に他のメンバーがmainブランチに変更をマージしている可能性があります。最新の状態を取得しましょう。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git checkout main"
+        ]
+      },
+      "hints": [
+        "git checkout main でmainブランチに切り替え",
+        "ブランチを切り替えた後はファイル内容がどう変わったか確認",
+        "Get-ChildItem でファイル一覧確認"
+      ],
+      "explanation": "mainブランチに戻ると、フィーチャーブランチで行った変更は見えなくなります。これが正常な動作です。"
+    },
+    {
+      "id": "step8",
+      "title": "🔄 他のメンバーの変更をシミュレート",
+      "description": "チーム開発を想定して、他のメンバーが行った変更を模擬的に作成します",
+      "pre_explanation": "実際のチーム開発では、あなたが作業している間に他のメンバーがmainブランチに変更をプッシュします。この状況をシミュレートしてみましょう。",
+      "goal": {
+        "type": "file_operations", 
+        "files": [
+          {
+            "name": "README.md",
+            "content": "# Team Project Repository\n\n## Features\n- [x] User Authentication\n- [ ] Data Management  \n- [ ] API Integration\n\n## Setup\nnpm install\nnpm test",
+            "action": "modify"
+          }
+        ]
+      },
+      "hints": [
+        "README.md を更新して他のメンバーの変更をシミュレート",
+        "User Authentication を完了済み（[x]）に変更",
+        "Setup セクションを追加",
+        "変更後は Get-Content README.md で内容確認"
+      ],
+      "explanation": "これは他のメンバーがプロジェクトのドキュメントを更新した変更をシミュレートしています。"
+    },
+    {
+      "id": "step9",
+      "title": "📝 他のメンバーの変更をコミット（シミュレート）",
+      "description": "他のメンバーの変更をコミットして、コンフリクトが発生する状況を準備します",
+      "pre_explanation": "他のメンバーの変更をコミットします。この後、あなたのフィーチャーブランチをマージする際にコンフリクトが発生する可能性があります。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git add README.md",
+          "git commit -m \"docs: update README with setup instructions\""
+        ]
+      },
+      "hints": [
+        "git add README.md で変更をステージング",
+        "git commit -m \"docs: update README with setup instructions\"",
+        "これで他のメンバーの変更がmainブランチに記録されました"
+      ],
+      "explanation": "これで、あなたのフィーチャーブランチが分岐した後にmainブランチが更新された状況になりました。"
+    },
+    {
+      "id": "step10",
+      "title": "🔀 フィーチャーブランチをmainブランチにマージ",
+      "description": "開発した機能をmainブランチにマージして、プロジェクトに統合します",
+      "pre_explanation": "開発が完了したフィーチャーブランチをmainブランチにマージします。実際のプロジェクトではプルリクエストを通しますが、ここではローカルでマージを体験します。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git merge feature/user-authentication"
+        ]
+      },
+      "hints": [
+        "現在mainブランチにいることを確認",
+        "git merge feature/user-authentication でマージ実行",
+        "マージ後は git log --oneline --graph でマージ履歴を確認",
+        "Get-ChildItem でマージ後のファイル確認"
+      ],
+      "explanation": "マージにより、フィーチャーブランチで開発した機能がmainブランチに統合されました。"
+    },
+    {
+      "id": "step11",
+      "title": "🧹 使用済みブランチのクリーンアップ",
+      "description": "マージ完了後、不要になったローカルブランチを削除します",
+      "pre_explanation": "マージが完了したフィーチャーブランチは不要になります。リポジトリを整理するため、ローカルブランチを削除しましょう。",
+      "goal": {
+        "type": "git_command",
+        "commands": [
+          "git branch -d feature/user-authentication"
+        ]
+      },
+      "hints": [
+        "git branch -d feature/user-authentication でマージ済みブランチを削除",
+        "git branch で残っているブランチを確認",
+        "-d オプションは安全な削除（マージ済みのみ削除）"
+      ],
+      "explanation": "不要なブランチを削除することで、リポジトリを整理し、混乱を避けることができます。"
+    },
+    {
+      "id": "step12",
+      "title": "📤 統合された変更をリモートにプッシュ",
+      "description": "マージで統合された最新のmainブランチをリモートリポジトリに反映します",
+      "pre_explanation": "ローカルでマージした結果をリモートにプッシュして、チーム全体で最新の状態を共有します。",
+      "goal": {
+        "type": "git_command", 
+        "commands": [
+          "git push origin main"
+        ]
+      },
+      "hints": [
+        "git push origin main で最新のmainブランチをプッシュ",
+        "これで他のメンバーが git pull で最新の変更を取得可能",
+        "git status で最終的な状態を確認"
+      ],
+      "explanation": "これで完全なフィーチャー開発サイクルが完了しました。新機能が本番環境にデプロイできる状態になりました。"
+    }
+  ],
+  "completion_message": "🎉 リモートワークフロー完了！\n\n📚 学習のまとめ:\n• リモートリポジトリ = チームで共有するコードの保管場所\n• プッシュ = ローカルの変更をリモートに送信\n• プル = リモートの変更をローカルに取得\n• フィーチャーブランチ = 機能開発用の作業ブランチ\n• マージ = 複数のブランチを統合する操作\n\n🔑 重要ポイント:\n• フィーチャーブランチで開発 → プッシュ → レビュー → マージ の流れが基本\n• 定期的にmainブランチの最新状態を取得することが重要\n• コミットメッセージは他のメンバーが理解しやすく書く\n• 使用済みブランチは削除してリポジトリを整理する\n\n🚀 次のステップ:\nプルリクエスト、コンフリクト解決、リベースなどの高度なトピックに挑戦しましょう！"
+}

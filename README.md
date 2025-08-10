@@ -164,6 +164,12 @@ ls -la
    # ワークツリーとブランチの違いを体験する特別シナリオ 🌟
    node bin/git-dojo.js start -s worktree-vs-branch
    
+   # リモートリポジトリとチーム開発ワークフロー 🚀
+   node bin/git-dojo.js start -s remote-workflow
+   
+   # マージコンフリクトの解決とチーム協調 ⚔️
+   node bin/git-dojo.js start -s conflict-resolution
+   
    # 詳細解説付きシナリオ
    node bin/git-dojo.js start -s branch-basics-enhanced
    ```
@@ -235,6 +241,40 @@ ls -la
 - ブランチ切り替え時のワークツリー変化を劇的に体験
 - 同じファイル名でもブランチによって内容が違うことを確認
 - 7つのステップで段階的に理解を深化
+
+#### 🚀 `remote-workflow` - リモートリポジトリとチーム開発ワークフロー
+**実際のチーム開発で使うGitワークフローを体験したい方におすすめ！**
+
+このシナリオでは：
+- リモートリポジトリ（GitHub等）との連携方法を学習
+- プッシュ（push）とプル（pull）の実践
+- フィーチャーブランチでの開発フローを体験
+- プルリクエスト（PR）の概念理解
+- 12ステップでチーム開発の一連の流れを習得
+
+#### ⚔️ `conflict-resolution` - マージコンフリクトの解決とチーム協調
+**複数人での開発で避けて通れないコンフリクト解決を学びたい方必見！**
+
+このシナリオでは：
+- マージコンフリクトが発生する原因と状況を理解
+- コンフリクトマーカーの読み方と意味を学習
+- 手動でのコンフリクト解決方法を実践
+- 解決後の適切な処理手順を習得
+- コンフリクトを予防するベストプラクティスを学習
+
+##### 📚 推奨学習順序
+
+```
+1️⃣ worktree-vs-branch      ← Git基本概念の理解
+    ↓
+2️⃣ remote-workflow         ← チーム開発の基本フロー  
+    ↓
+3️⃣ conflict-resolution     ← 実践的なトラブル解決
+```
+
+**初学者の方**: `worktree-vs-branch` → `remote-workflow` の順で学習することをお勧めします
+
+**チーム開発経験者**: `conflict-resolution` で実践的なスキルアップが可能です
 
 ##### 📋 シナリオの流れ（7ステップ）
 
@@ -475,7 +515,7 @@ node bin/git-dojo.js status      # 進捗確認
 
 | コマンド | 機能 | 使用例 |
 |---------|------|--------|
-| `start` | シナリオ開始 | `node bin/git-dojo.js start -s branch-basics-enhanced` |
+| `start` | シナリオ開始 | `node bin/git-dojo.js start -s worktree-vs-branch` |
 | `status` | 進捗確認 | `node bin/git-dojo.js status` |
 | `hint` | ヒント表示 | `node bin/git-dojo.js hint` |
 | `worktree` | 全ブランチ＋ワークツリー詳細 | `node bin/git-dojo.js worktree` |
