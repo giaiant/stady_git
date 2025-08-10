@@ -7,6 +7,7 @@ async function showWorkingTreeVisualization() {
   
   console.log(chalk.cyan('📁 ワークツリーの現在状態:'));
   console.log(chalk.yellow(`🌿 現在のブランチ: ${status.currentBranch}`));
+  console.log(chalk.gray(`📂 監視中のディレクトリ: ${require('./sandbox').getSandboxPath()}/repo`));
   console.log('');
   
   // ファイル一覧と状態

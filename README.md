@@ -160,9 +160,15 @@ ls -la
    node bin/git-dojo.js start -s branch-basics-enhanced
    ```
 
-3. **サンドボックスで実操作**（別ターミナル可）:
+3. **サンドボックスで実操作**:
    ```powershell
-   cd tools/git-dojo/.sandbox/repo
+   # 【重要】別ターミナルでサンドボックスに移動（絶対パス推奨）
+   cd C:\dev\stady_git\tools\git-dojo\.sandbox\repo
+   
+   # または相対パス（tools/git-dojoから）
+   cd .sandbox\repo
+   
+   # Gitコマンドを実行
    git branch feature/todo
    git checkout feature/todo
    Add-Content README.md "ロールプレイ: 1行追記"
@@ -172,9 +178,10 @@ ls -la
    git merge feature/todo
    ```
 
-4. **学習支援コマンド**:
+4. **学習支援コマンド**（必ず `tools/git-dojo` から実行）:
    ```powershell
-   cd tools/git-dojo
+   # 【重要】Git Dojoコマンドは tools/git-dojo から実行
+   cd C:\dev\stady_git\tools\git-dojo
    
    # 進捗確認（詳細なワークツリー状態付き）
    node bin/git-dojo.js status
@@ -196,8 +203,18 @@ ls -la
 
 5. **リセット（やり直し）**:
    ```powershell
-   Remove-Item -Recurse -Force tools/git-dojo/.sandbox
+   # どこからでも実行可能（絶対パス）
+   Remove-Item -Recurse -Force C:\dev\stady_git\tools\git-dojo\.sandbox
+   
+   # または tools/git-dojo から実行
+   cd C:\dev\stady_git\tools\git-dojo
+   Remove-Item -Recurse -Force .sandbox
    ```
+
+### 📍 パス管理のまとめ
+- **Git Dojoコマンド**: `C:\dev\stady_git\tools\git-dojo` から実行
+- **Gitコマンド**: `C:\dev\stady_git\tools\git-dojo\.sandbox\repo` から実行
+- **リセット**: どこからでも絶対パスで実行可能
 
 ### 新機能
 - 📁 **ワークツリー可視化**: ファイル状態とブランチとの関係を詳細表示

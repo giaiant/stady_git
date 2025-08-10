@@ -40,6 +40,12 @@ async function showStatus() {
   const { meta, scenario } = loadScenario();
   const step = scenario.steps[meta.stepIndex];
   
+  // 現在のパス情報を表示
+  console.log(chalk.blue('📍 実行パス確認:'));
+  console.log(chalk.gray(`   現在のパス: ${process.cwd()}`));
+  console.log(chalk.gray(`   このコマンドは tools/git-dojo から実行してください`));
+  console.log('');
+  
   // ワークツリーの可視化を先に表示
   await showWorkingTreeVisualization();
   
@@ -88,8 +94,13 @@ async function showStatus() {
     }
     
     console.log('');
-    console.log(chalk.yellow('💡 ヒントが必要な場合は: node bin/git-dojo.js hint'));
-    console.log(chalk.yellow('📁 詳細状態を見る場合は: node bin/git-dojo.js worktree'));
+    console.log(chalk.yellow('💡 ヒントが必要な場合は:'));
+    console.log(chalk.gray('   tools/git-dojo で実行 → node bin/git-dojo.js hint'));
+    console.log(chalk.yellow('📁 詳細状態を見る場合は:'));
+    console.log(chalk.gray('   tools/git-dojo で実行 → node bin/git-dojo.js worktree'));
+    console.log('');
+    console.log(chalk.blue('📍 Gitコマンドは以下で実行:'));
+    console.log(chalk.gray(`   cd "${require('./sandbox').getSandboxPath()}/repo"`));
   }
   console.log('');
 }
