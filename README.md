@@ -183,25 +183,24 @@ ls -la
    # 【重要】Git Dojoコマンドは tools/git-dojo から実行
    cd C:\dev\stady_git\tools\git-dojo
    
-   # 進捗確認（詳細なワークツリー状態付き）
-   node bin/git-dojo.js status
+   # 基本コマンド
+   node bin/git-dojo.js status     # 進捗確認（詳細なワークツリー状態付き）
+   node bin/git-dojo.js hint       # ヒント表示
+   node bin/git-dojo.js diagram    # ブランチ履歴図
    
-   # ワークツリーの詳細可視化
-   node bin/git-dojo.js worktree
+   # 詳細可視化コマンド
+   node bin/git-dojo.js worktree   # 全ブランチ概要＋ワークツリー詳細可視化
    
-   # ヒント表示
-   node bin/git-dojo.js hint
+   # マージ関連コマンド
+   node bin/git-dojo.js merge-preview -t feature/todo        # マージプレビュー
+   node bin/git-dojo.js merge-preview -b main -t feature/todo # ベースブランチ指定
    
-   # ブランチ履歴図
-   node bin/git-dojo.js diagram
-   
-   # 操作の解説
-   node bin/git-dojo.js explain -o branch_create
-   node bin/git-dojo.js explain -o branch_switch
-   node bin/git-dojo.js explain -o git_commit
-   
-   # マージプレビュー（何がマージされるか事前確認）
-   node bin/git-dojo.js merge-preview -t feature/todo
+   # 操作解説コマンド
+   node bin/git-dojo.js explain -o branch_create    # ブランチ作成の解説
+   node bin/git-dojo.js explain -o branch_switch    # ブランチ切り替えの解説
+   node bin/git-dojo.js explain -o git_commit       # コミットの解説
+   node bin/git-dojo.js explain -o git_add          # ステージングの解説
+   node bin/git-dojo.js explain -o git_merge        # マージの解説
    ```
 
 5. **リセット（やり直し）**:
@@ -227,9 +226,30 @@ ls -la
 - 💡 **操作解説**: 各Git操作の意味と影響を段階的に説明
 - 📚 **学習まとめ**: シナリオ完了時に重要概念を整理
 
+### 📝 コマンドリファレンス
+
+| コマンド | 機能 | 使用例 |
+|---------|------|--------|
+| `start` | シナリオ開始 | `node bin/git-dojo.js start -s branch-basics-enhanced` |
+| `status` | 進捗確認 | `node bin/git-dojo.js status` |
+| `hint` | ヒント表示 | `node bin/git-dojo.js hint` |
+| `worktree` | 全ブランチ＋ワークツリー詳細 | `node bin/git-dojo.js worktree` |
+| `diagram` | ブランチ履歴図 | `node bin/git-dojo.js diagram` |
+| `merge-preview` | マージプレビュー | `node bin/git-dojo.js merge-preview -t feature/todo` |
+| `explain` | 操作解説 | `node bin/git-dojo.js explain -o git_commit` |
+
+#### explain オプション一覧
+- `branch_create` - ブランチ作成の解説
+- `branch_switch` - ブランチ切り替えの解説  
+- `git_add` - ステージングの解説
+- `git_commit` - コミットの解説
+- `git_merge` - マージの解説
+- `file_edit` - ファイル編集の解説
+
 ### 注意事項
 - サンドボックスは `tools/git-dojo/.sandbox/repo` に作成され、既存プロジェクトは変更しません
 - 理解が困難な場合は `worktree` コマンドで状態を詳しく確認してください
+- 操作に迷った場合は `status` → `hint` → `worktree` の順で確認することをお勧めします
 
 ## 📖 参考資料
 
