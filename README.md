@@ -231,276 +231,40 @@ ls -la
 - **Gitコマンド**: `C:\dev\stady_git\tools\git-dojo\.sandbox\repo` から実行
 - **リセット**: どこからでも絶対パスで実行可能
 
-### 🎯 推奨学習シナリオ
+### 🎯 利用可能なシナリオ
 
-#### 🌟 `worktree-vs-branch` - ワークツリーとブランチの違い体験
-**ワークツリーとブランチの違いを実体験で学びたい方に最適！**
+Git Dojo では段階的にスキルアップできる3つのシナリオを提供しています：
 
-この特別シナリオでは：
-- ワークツリー（実際のファイル）とブランチ（履歴の流れ）の違いを実感
-- ブランチ切り替え時のワークツリー変化を劇的に体験
-- 同じファイル名でもブランチによって内容が違うことを確認
-- 7つのステップで段階的に理解を深化
+| シナリオ | 難易度 | 学習目標 | 詳細ドキュメント |
+|---------|--------|---------|-----------------|
+| 🌟 **worktree-vs-branch** | ⭐⭐☆☆☆ | Git基本概念の理解 | **[詳細を見る](docs/scenarios/worktree-vs-branch.md)** |
+| 🚀 **remote-workflow** | ⭐⭐⭐☆☆ | チーム開発フロー | **[詳細を見る](docs/scenarios/remote-workflow.md)** |
+| ⚔️ **conflict-resolution** | ⭐⭐⭐⭐☆ | コンフリクト解決 | **[詳細を見る](docs/scenarios/conflict-resolution.md)** |
 
-#### 🚀 `remote-workflow` - リモートリポジトリとチーム開発ワークフロー
-**実際のチーム開発で使うGitワークフローを体験したい方におすすめ！**
-
-このシナリオでは：
-- リモートリポジトリ（GitHub等）との連携方法を学習
-- プッシュ（push）とプル（pull）の実践
-- フィーチャーブランチでの開発フローを体験
-- プルリクエスト（PR）の概念理解
-- 12ステップでチーム開発の一連の流れを習得
-
-#### ⚔️ `conflict-resolution` - マージコンフリクトの解決とチーム協調
-**複数人での開発で避けて通れないコンフリクト解決を学びたい方必見！**
-
-このシナリオでは：
-- マージコンフリクトが発生する原因と状況を理解
-- コンフリクトマーカーの読み方と意味を学習
-- 手動でのコンフリクト解決方法を実践
-- 解決後の適切な処理手順を習得
-- コンフリクトを予防するベストプラクティスを学習
-
-##### 📚 推奨学習順序
-
+#### 📚 推奨学習順序
 ```
-1️⃣ worktree-vs-branch      ← Git基本概念の理解
-    ↓
-2️⃣ remote-workflow         ← チーム開発の基本フロー  
-    ↓
-3️⃣ conflict-resolution     ← 実践的なトラブル解決
+1️⃣ worktree-vs-branch → 2️⃣ remote-workflow → 3️⃣ conflict-resolution
 ```
 
-**初学者の方**: `worktree-vs-branch` → `remote-workflow` の順で学習することをお勧めします
+#### 📖 すべてのシナリオ詳細
+**[📋 シナリオ一覧とガイド](docs/scenarios/README.md)** で各シナリオの詳細、学習目標、実行手順を確認できます。
 
-**チーム開発経験者**: `conflict-resolution` で実践的なスキルアップが可能です
+### 🚀 クイックスタート
 
-##### 📋 シナリオの流れ（7ステップ）
-
-# 実行場所
-C:\dev\stady_git\tools\git-dojo\.sandbox\repo
-
-##### 🎬 **自動セットアップについて**
-
-**「自動セットアップ」とは：**
-- `node bin/git-dojo.js start -s worktree-vs-branch` を実行した時
-- システムが `.sandbox\repo` フォルダを作成し、初期ファイルを自動生成すること
-- **あなたが手動で実行する必要はありません**
-
-**システムが自動実行するコマンド：**
-```powershell
-# 以下は内部的に自動実行される（手動実行不要）
-echo "メインブランチの内容です" > main-file.txt
-git add main-file.txt
-git commit -m "main: 初期ファイル作成"
-echo "共通ファイルの初期内容" > shared-file.txt
-git add shared-file.txt
-git commit -m "main: 共通ファイル作成"
-```
-
-**正しい開始手順：**
 ```powershell
 # 1. Git Dojo ディレクトリに移動
 cd C:\dev\stady_git\tools\git-dojo
 
-# 2. 古いサンドボックスをクリア（もしあれば）
-Remove-Item -Recurse -Force .sandbox -ErrorAction SilentlyContinue
-
-# 3. シナリオを開始（サンドボックス初期化と自動セットアップが実行される）
+# 2. シナリオを開始
 node bin/git-dojo.js start -s worktree-vs-branch
 
-# 4. 別ターミナルで自動作成されたサンドボックスに移動
+# 3. 別ターミナルでサンドボックスに移動
 cd C:\dev\stady_git\tools\git-dojo\.sandbox\repo
 
-# 5. 初期ファイルが作成されていることを確認
-Get-ChildItem
-# → main-file.txt と shared-file.txt が表示されるはず
+# 4. 学習開始！
 ```
 
-**ステップ1: 🔍 現在のワークツリーを観察**
-```powershell
-# ファイル一覧を確認
-Get-ChildItem
-# → main-file.txt と shared-file.txt が見える
-
-# ファイル内容を確認
-Get-Content main-file.txt
-# → "メインブランチの内容です"
-
-Get-Content shared-file.txt
-# → "共通ファイルの初期内容"
-
-# 現在のブランチを確認
-git branch
-# → * main（*マークが現在のブランチ）
-```
-**学習ポイント**: これらのファイルが「ワークツリー」で実際に見えるファイルです
-
-**ステップ2: 🌿 新しいブランチを作成（まだ切り替えない）**
-```powershell
-# 新しいブランチを作成
-git branch feature/new-content
-
-# ブランチ一覧を確認
-git branch
-# → * main
-#    feature/new-content
-
-# ファイル一覧を再確認
-Get-ChildItem
-# → まだ同じファイルが見える（重要！）
-```
-**学習ポイント**: ブランチを作っただけではワークツリーは変化しない
-
-**ステップ3: 🔄 ブランチを切り替えてワークツリーの変化を観察**
-```powershell
-# ブランチを切り替え
-git checkout feature/new-content
-
-# 現在のブランチを確認
-git branch
-# → main
-#    * feature/new-content
-
-# ファイル一覧と内容を確認
-Get-ChildItem
-Get-Content shared-file.txt
-# → まだ同じ内容（同じコミット履歴のため）
-```
-**学習ポイント**: 切り替え直後はまだ同じコミット履歴を共有している
-
-**ステップ4: 📝 新ブランチでファイルを編集**
-```powershell
-# 既存ファイルを編集
-Add-Content shared-file.txt "新ブランチで追加した行"
-
-# 新ファイルを作成
-echo "新機能ブランチ専用のファイルです" > feature-file.txt
-
-# 変更を確認
-Get-ChildItem
-# → main-file.txt, shared-file.txt, feature-file.txt
-
-Get-Content shared-file.txt
-# → 共通ファイルの初期内容
-#   新ブランチで追加した行
-
-Get-Content feature-file.txt
-# → 新機能ブランチ専用のファイルです
-```
-**学習ポイント**: ワークツリーでの編集はまだ「どのブランチにも属さない」
-
-**ステップ5: 💾 変更をコミットしてブランチに記録**
-```powershell
-# 変更状況を確認
-git status
-# → 変更されたファイルと新しいファイルが表示される
-
-# すべての変更をステージング
-git add .
-
-# コミット
-git commit -m "feature: 共通ファイル更新と新ファイル追加"
-
-# コミット履歴を確認
-git log --oneline
-```
-**学習ポイント**: これで変更が「feature/new-contentブランチの履歴」になった
-
-**ステップ6: 🔙 mainブランチに戻ってワークツリーの劇的変化を体験**
-```powershell
-# 切り替え前の状態を確認
-Get-ChildItem
-# → main-file.txt, shared-file.txt, feature-file.txt
-
-Get-Content shared-file.txt
-# → 共通ファイルの初期内容
-#   新ブランチで追加した行
-
-# mainブランチに切り替え
-git checkout main
-
-# 🎉 劇的変化を確認！
-Get-ChildItem
-# → main-file.txt, shared-file.txt（feature-file.txtが消えた！）
-
-Get-Content shared-file.txt
-# → 共通ファイルの初期内容（追加した行が消えた！）
-```
-**🌟 最重要学習ポイント**: ワークツリーが「現在のブランチの窓」であることを実感！
-
-**ステップ7: 🔄 ブランチ間を行き来してワークツリーの変化を確認**
-```powershell
-# feature ブランチに戻る
-git checkout feature/new-content
-Get-ChildItem  # → feature-file.txt が復活！
-Get-Content shared-file.txt  # → 追加した行も復活！
-
-# main ブランチに戻る
-git checkout main
-Get-ChildItem  # → feature-file.txt が消える
-Get-Content shared-file.txt  # → 元の内容に戻る
-
-# この切り替えを何度か繰り返してみてください
-```
-**学習ポイント**: ワークツリーは「現在のブランチの最新コミット」を常に反映
-
-##### 🚀 開始方法
-
-**❌ よくあるエラーと原因**
-```
-エラー: パス 'C:\dev\stady_git\tools\git-dojo\.sandbox\repo' が存在しないため検出できません
-原因: シナリオを開始する前に .sandbox\repo に移動しようとした
-```
-
-**✅ 正しい手順**
-```powershell
-# 【重要】必ずこの順番で実行してください
-
-# ステップ1: Git Dojo ディレクトリに移動
-cd C:\dev\stady_git\tools\git-dojo
-
-# ステップ2: シナリオ開始（.sandbox\repo が自動作成される）
-node bin/git-dojo.js start -s worktree-vs-branch
-
-# ステップ3: 成功メッセージを確認後、別ターミナルで移動
-cd C:\dev\stady_git\tools\git-dojo\.sandbox\repo
-
-# ステップ4: ここで7ステップの学習を開始
-Get-ChildItem  # 自動作成されたファイルを確認
-```
-
-##### 💡 学習のコツ
-```powershell
-# 【必須】各ステップで以下を実行
-Get-ChildItem                    # ファイル一覧確認
-git branch                       # 現在のブランチ確認
-Get-Content shared-file.txt      # ファイル内容確認
-git status                       # Git状態確認
-
-# 【理解促進】変化の前後比較
-# ブランチ切り替え前
-Get-ChildItem > before.txt
-# 切り替え後
-Get-ChildItem > after.txt
-# 違いを確認
-Compare-Object (Get-Content before.txt) (Get-Content after.txt)
-
-# 【詳細確認】Git Dojo コマンド（別ターミナルで）
-cd C:\dev\stady_git\tools\git-dojo
-node bin/git-dojo.js worktree    # 全体状況把握
-node bin/git-dojo.js status      # 進捗確認
-```
-
-##### 🎯 **体験で理解する重要概念**
-
-| 概念 | 体験する瞬間 | 確認コマンド |
-|------|-------------|-------------|
-| **ワークツリー** | ステップ1で実際のファイルを見る | `Get-ChildItem` |
-| **ブランチは履歴** | ステップ2でブランチ作成してもファイル不変 | `git branch` → `Get-ChildItem` |
-| **ブランチ切り替え** | ステップ6でファイルが劇的に変化 | `git checkout` → `Get-ChildItem` |
-| **窓の概念** | ステップ7でブランチ間を行き来 | 繰り返し切り替えて確認 |
+**詳細な手順と各シナリオの説明**: **[📋 シナリオガイド](docs/scenarios/README.md)**
 
 ### 新機能
 - 🌳 **全ブランチ概要**: 各ブランチのファイル状況とコミット履歴を一覧表示
