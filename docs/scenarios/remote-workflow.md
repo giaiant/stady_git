@@ -2,17 +2,25 @@
 
 ## 🎯 概要
 
-**実際のチーム開発で使うGitワークフローを体験したい方におすすめ！**
+**実際のGitHubリポジトリを使用したチーム開発ワークフローを体験したい方におすすめ！**
 
-このシナリオでは、GitHub等のリモートリポジトリとの連携、プッシュ・プル操作、フィーチャーブランチでの開発フローなど、実際のチーム開発で必要なGitスキルを体験できます。
+このシナリオでは、**実際のGitHubアカウント**でリポジトリを作成し、リモートリポジトリとの連携、プッシュ・プル操作、プルリクエスト（PR）の作成・マージなど、本格的なチーム開発で必要なGitスキルを体験できます。
+
+**特徴**:
+- 🔥 **実際のGitHubリポジトリ**を使用
+- 🚀 **GitHub CLI**を活用した効率的な開発フロー
+- 🔀 **プルリクエスト**の実際の作成・マージ体験
+- 🌐 **GitHub Web UI**での操作確認
 
 ## 🎓 学習目標
 
-- リモートリポジトリ（GitHub等）との連携方法を学習
-- プッシュ（push）とプル（pull）の実践
-- フィーチャーブランチでの開発フローを体験
-- プルリクエスト（PR）の概念理解
-- 12ステップでチーム開発の一連の流れを習得
+- **実際のGitHubリポジトリ**との連携方法を学習
+- **プッシュ（push）とプル（pull）**の実践
+- **フィーチャーブランチ**での開発フローを体験
+- **プルリクエスト（PR）**の作成・マージ・削除
+- **GitHub CLI**を使った効率的な開発フロー
+- **実際のチーム開発**で使われるワークフロー全体の習得
+- 12ステップで**本格的なリモート連携開発**を体験
 
 ## 🚀 開始方法
 
@@ -25,6 +33,7 @@
 
 ### 実行手順
 
+#### **方法1: GitHub CLI を使用（推奨）**
 ```powershell
 # 1. Git Dojo ディレクトリに移動
 cd C:\dev\stady_git\tools\git-dojo
@@ -38,14 +47,36 @@ node bin/git-dojo.js start -s remote-workflow
 # 4. 別ターミナルでサンドボックスに移動
 cd C:\dev\stady_git\tools\git-dojo\.sandbox\repo
 
-# 5. 実際のGitHubリポジトリを作成（初回のみ）
-gh repo create git-dojo-team-project --public --description "Git Dojo team development workflow practice"
+# 5. GitHub CLI認証確認（初回のみ）
+gh auth status
 
-# 6. リモートURLを実際のリポジトリに設定
-git remote set-url origin https://github.com/[あなたのGitHubユーザー名]/git-dojo-team-project.git
+# 6. 認証が未完了の場合は認証実行
+gh auth login
+
+# 7. 実際のGitHubリポジトリを作成してリモート設定
+gh repo create git-dojo-team-project --public --description "Git Dojo team development workflow practice" --remote=origin
+
+# 8. リモート設定確認
+git remote -v
 ```
 
-**⚠️ 重要**: `[あなたのGitHubユーザー名]` は実際のGitHubユーザー名に置き換えてください。
+#### **方法2: 手動でリポジトリ作成**
+```powershell
+# 1-4は方法1と同じ
+
+# 5. GitHubでリポジトリを手動作成
+# https://github.com/new でリポジトリ作成
+
+# 6. リモートURLを設定
+git remote set-url origin https://github.com/[あなたのGitHubユーザー名]/git-dojo-team-project.git
+
+# 7. リモート設定確認
+git remote -v
+```
+
+**⚠️ 重要**: 
+- `[あなたのGitHubユーザー名]` は実際のGitHubユーザー名に置き換えてください
+- GitHub CLI使用時は `--remote=origin` オプションで自動的にリモートが設定されます
 
 ## 📋 シナリオの流れ（12ステップ）
 
@@ -70,22 +101,16 @@ echo "}" >> auth.js
 git add auth.js
 git commit -m "feat: add auth skeleton"
 
-# リモートリポジトリの設定（一時的なダミーURL - 後で実際のURLに変更）
+# 一時的なリモート設定（後で実際のGitHubリポジトリのURLに変更されます）
 git remote add origin https://github.com/dummy/team-project.git
 ```
 
-### **ステップ1: 🌐 実際のGitHubリポジトリ作成と設定**
+**📝 注意**: 自動セットアップ後、実行手順で実際のGitHubリポジトリのURLに変更する必要があります。
 
-本格的なチーム開発環境を準備します：
+### **ステップ1: 🌐 リモートリポジトリの状態確認**
+
+セットアップ完了後の状態を確認します：
 ```powershell
-# GitHubリポジトリを作成（GitHub CLIを使用）
-gh repo create git-dojo-team-project --public --description "Git Dojo team development workflow practice"
-
-# または手動でリポジトリURLを設定する場合
-# 1. GitHubでリポジトリを手動作成
-# 2. 以下のコマンドで実際のURLに変更
-git remote set-url origin https://github.com/[あなたのGitHubユーザー名]/git-dojo-team-project.git
-
 # リモートリポジトリ確認
 git remote -v
 # → origin https://github.com/[ユーザー名]/git-dojo-team-project.git (fetch)
@@ -93,12 +118,22 @@ git remote -v
 
 # ローカルの状態確認
 git status
+# → On branch main
+# → nothing to commit, working tree clean
+
+# コミット履歴確認
 git log --oneline
+# → [hash] feat: add auth skeleton
+# → [hash] docs: initial project setup
 
 # プロジェクトファイル確認
 Get-ChildItem
+# → README.md, auth.js
+
+# GitHubリポジトリがWebで確認可能
+gh repo view --web
 ```
-**学習ポイント**: 実際のGitHubリポジトリが作成され、ローカルと連携準備完了
+**学習ポイント**: 実際のGitHubリポジトリとローカルが連携され、プッシュ準備完了
 
 ### **ステップ2: 📤 初回プッシュでリモートとの連携開始**
 
