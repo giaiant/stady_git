@@ -52,6 +52,15 @@ async function showStatus() {
   console.log(chalk.cyan(`📋 現在の目標: ${step.goal}`));
   console.log('');
   
+  // 目標達成のための具体的なステップを表示
+  if (step.hints && step.hints.length > 0) {
+    console.log(chalk.yellow('🎯 目標達成のためのステップ:'));
+    step.hints.forEach((hint, index) => {
+      console.log(chalk.white(`   ${index + 1}. ${hint}`));
+    });
+    console.log('');
+  }
+  
   const ok = await checkStep(step);
   if (ok) {
     console.log(chalk.green('✔ 達成しました！'));
@@ -94,13 +103,22 @@ async function showStatus() {
     }
     
     console.log('');
-    console.log(chalk.yellow('💡 ヒントが必要な場合は:'));
-    console.log(chalk.gray('   tools/git-dojo で実行 → node bin/git-dojo.js hint'));
-    console.log(chalk.yellow('📁 詳細状態を見る場合は:'));
-    console.log(chalk.gray('   tools/git-dojo で実行 → node bin/git-dojo.js worktree'));
+    console.log(chalk.cyan('🚀 今すぐやること:'));
+    console.log(chalk.blue('   1. 新しいターミナルを開くか、以下のパスに移動:'));
+    console.log(chalk.yellow(`      cd "${require('./sandbox').getSandboxPath()}/repo"`));
+    console.log(chalk.blue('   2. 以下のコマンドを順番に実行:'));
+    if (step.hints && step.hints.length > 0) {
+      step.hints.forEach((hint, index) => {
+        console.log(chalk.yellow(`      ${index + 1}. ${hint}`));
+      });
+    }
+    console.log(chalk.blue('   3. このターミナルに戻って進捗確認:'));
+    console.log(chalk.yellow('      node bin/git-dojo.js status'));
     console.log('');
-    console.log(chalk.blue('📍 Gitコマンドは以下で実行:'));
-    console.log(chalk.gray(`   cd "${require('./sandbox').getSandboxPath()}/repo"`));
+    console.log(chalk.gray('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'));
+    console.log(chalk.yellow('💡 追加ヘルプ:'));
+    console.log(chalk.gray('   詳しいヒント → node bin/git-dojo.js hint'));
+    console.log(chalk.gray('   詳細状態確認 → node bin/git-dojo.js worktree'));
   }
   console.log('');
 }

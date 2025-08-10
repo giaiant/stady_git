@@ -9,7 +9,8 @@
       ],
       "hints": [
         "git branch feature/todo",
-        "git checkout feature/todo"
+        "git checkout feature/todo",
+        "git branch で現在のブランチを確認"
       ],
       "explain": "ワークツリーは現在のブランチのスナップショットを反映します。"
     },
@@ -19,7 +20,8 @@
         { "predicate": "noUncommittedChanges", "args": [] }
       ],
       "hints": [
-        "README.md を編集後、git add README.md",
+        "Add-Content README.md \"ロールプレイ: 1行追記\"",
+        "git add README.md",
         "git commit -m \"docs: update README\""
       ],
       "explain": "コミットはブランチ先端に積まれ、HEADが更新されます。"
