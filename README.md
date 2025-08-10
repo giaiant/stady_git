@@ -140,6 +140,42 @@ ls -la
 - [ ] ブランチ切り替え時の動作を理解している
 - [ ] 実際の操作で違いを確認できる
 
+## Git Dojo の使い方（ロールプレイ学習CLI）
+
+- **前提**: Node.js 18+ と Git がインストール済み
+- **初期セットアップ**:
+  ```powershell
+  cd tools/git-dojo
+  npm install
+  ```
+- **シナリオ開始**:
+  ```powershell
+  node bin/git-dojo.js start
+  ```
+- **サンドボックスで実操作**（別ターミナル可）:
+  ```powershell
+  cd tools/git-dojo/.sandbox/repo
+  git branch feature/todo
+  git checkout feature/todo
+  Add-Content README.md "ロールプレイ: 1行追記"
+  git add README.md
+  git commit -m "docs: update README"
+  git checkout main
+  git merge feature/todo
+  ```
+- **進捗確認/ヒント/履歴図**:
+  ```powershell
+  cd tools/git-dojo
+  node bin/git-dojo.js status
+  node bin/git-dojo.js hint
+  node bin/git-dojo.js diagram
+  ```
+- **リセット（やり直し）**:
+  ```powershell
+  Remove-Item -Recurse -Force tools/git-dojo/.sandbox
+  ```
+- 注意: サンドボックスは `tools/git-dojo/.sandbox/repo` に作成され、既存プロジェクトは変更しません。
+
 ## 📖 参考資料
 
 - [Git公式ドキュメント - ブランチ](https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E6%A9%9F%E8%83%BD)

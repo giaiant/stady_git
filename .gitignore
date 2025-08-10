@@ -1,2 +1,4 @@
 # Git Dojo sandbox
 /tools/git-dojo/.sandbox/
+# Git Dojo node modules
+/tools/git-dojo/node_modules/
