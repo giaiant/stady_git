@@ -142,39 +142,72 @@ ls -la
 
 ## Git Dojo の使い方（ロールプレイ学習CLI）
 
-- **前提**: Node.js 18+ と Git がインストール済み
-- **初期セットアップ**:
-  ```powershell
-  cd tools/git-dojo
-  npm install
-  ```
-- **シナリオ開始**:
-  ```powershell
-  node bin/git-dojo.js start
-  ```
-- **サンドボックスで実操作**（別ターミナル可）:
-  ```powershell
-  cd tools/git-dojo/.sandbox/repo
-  git branch feature/todo
-  git checkout feature/todo
-  Add-Content README.md "ロールプレイ: 1行追記"
-  git add README.md
-  git commit -m "docs: update README"
-  git checkout main
-  git merge feature/todo
-  ```
-- **進捗確認/ヒント/履歴図**:
-  ```powershell
-  cd tools/git-dojo
-  node bin/git-dojo.js status
-  node bin/git-dojo.js hint
-  node bin/git-dojo.js diagram
-  ```
-- **リセット（やり直し）**:
-  ```powershell
-  Remove-Item -Recurse -Force tools/git-dojo/.sandbox
-  ```
-- 注意: サンドボックスは `tools/git-dojo/.sandbox/repo` に作成され、既存プロジェクトは変更しません。
+### 前提条件
+- Node.js 18+ と Git がインストール済み
+
+### 基本的な使い方
+
+1. **初期セットアップ**:
+   ```powershell
+   cd tools/git-dojo
+   npm install
+   ```
+
+2. **シナリオ開始**:
+   ```powershell
+   node bin/git-dojo.js start
+   # または詳細解説付きシナリオ
+   node bin/git-dojo.js start -s branch-basics-enhanced
+   ```
+
+3. **サンドボックスで実操作**（別ターミナル可）:
+   ```powershell
+   cd tools/git-dojo/.sandbox/repo
+   git branch feature/todo
+   git checkout feature/todo
+   Add-Content README.md "ロールプレイ: 1行追記"
+   git add README.md
+   git commit -m "docs: update README"
+   git checkout main
+   git merge feature/todo
+   ```
+
+4. **学習支援コマンド**:
+   ```powershell
+   cd tools/git-dojo
+   
+   # 進捗確認（詳細なワークツリー状態付き）
+   node bin/git-dojo.js status
+   
+   # ワークツリーの詳細可視化
+   node bin/git-dojo.js worktree
+   
+   # ヒント表示
+   node bin/git-dojo.js hint
+   
+   # ブランチ履歴図
+   node bin/git-dojo.js diagram
+   
+   # 操作の解説
+   node bin/git-dojo.js explain -o branch_create
+   node bin/git-dojo.js explain -o branch_switch
+   node bin/git-dojo.js explain -o git_commit
+   ```
+
+5. **リセット（やり直し）**:
+   ```powershell
+   Remove-Item -Recurse -Force tools/git-dojo/.sandbox
+   ```
+
+### 新機能
+- 📁 **ワークツリー可視化**: ファイル状態とブランチとの関係を詳細表示
+- 🔍 **詳細ステータス**: 未達成理由と次のステップを具体的に表示
+- 💡 **操作解説**: 各Git操作の意味と影響を段階的に説明
+- 📚 **学習まとめ**: シナリオ完了時に重要概念を整理
+
+### 注意事項
+- サンドボックスは `tools/git-dojo/.sandbox/repo` に作成され、既存プロジェクトは変更しません
+- 理解が困難な場合は `worktree` コマンドで状態を詳しく確認してください
 
 ## 📖 参考資料
 

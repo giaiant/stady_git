@@ -31,4 +31,51 @@ async function isMerged(base, topic) {
   return res.split(/\r?\n/).map(s => s.trim().replace(/^\*\s*/, '')).includes(topic);
 }
 
-module.exports = { getRepo, currentBranch, hasUncommittedChanges, logOneline, isMerged };
+async function getWorkingTreeStatus() {
+  const git = getRepo();
+  const status = await git.status();
+  const branch = await currentBranch();
+  
+  return {
+    currentBranch: branch,
+    files: status.files,
+    staged: status.staged,
+    modified: status.modified,
+    created: status.created,
+    deleted: status.deleted,
+    not_added: status.not_added,
+    conflicted: status.conflicted
+  };
+}
+
+async function listAllFiles() {
+  const fs = require('fs');
+  const path = require('path');
+  const repoPath = path.join(require('./sandbox').getSandboxPath(), 'repo');
+  
+  function readDirRecursive(dir, basePath = '') {
+    const files = [];
+    const items = fs.readdirSync(dir);
+    
+    for (const item of items) {
+      if (item === '.git') continue;
+      const fullPath = path.join(dir, item);
+      const relativePath = basePath ? path.join(basePath, item) : item;
+      
+      if (fs.statSync(fullPath).isDirectory()) {
+        files.push(...readDirRecursive(fullPath, relativePath));
+      } else {
+        files.push(relativePath);
+      }
+    }
+    return files;
+  }
+  
+  try {
+    return readDirRecursive(repoPath);
+  } catch (e) {
+    return [];
+  }
+}
+
+module.exports = { getRepo, currentBranch, hasUncommittedChanges, logOneline, isMerged, getWorkingTreeStatus, listAllFiles };

@@ -8,6 +8,7 @@ const { showStatus } = require('../lib/status');
 const { showHint } = require('../lib/hint');
 const { showDiagram } = require('../lib/diagram');
 const { startScenario } = require('../lib/start');
+const { showWorkingTreeVisualization, explainCurrentOperation } = require('../lib/visualize');
 
 const program = new Command();
 program
@@ -65,6 +66,33 @@ program
       await showDiagram();
     } catch (e) {
       console.error(chalk.red('Failed to show diagram:'), e.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('worktree')
+  .description('Show detailed working tree visualization and explanation')
+  .action(async () => {
+    try {
+      await ensureSandbox();
+      await showWorkingTreeVisualization();
+    } catch (e) {
+      console.error(chalk.red('Failed to show working tree:'), e.message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('explain')
+  .description('Explain the current operation with context')
+  .option('-o, --operation <type>', 'Operation type to explain')
+  .action(async (opts) => {
+    try {
+      await ensureSandbox();
+      explainCurrentOperation(opts.operation || 'general');
+    } catch (e) {
+      console.error(chalk.red('Failed to explain:'), e.message);
       process.exit(1);
     }
   });

@@ -1,0 +1,81 @@
+{
+  "id": "branch-basics-enhanced",
+  "title": "ブランチ基礎（詳細解説付き）",
+  "description": "ワークツリーとブランチの関係を詳しく理解する",
+  "steps": [
+    {
+      "goal": "feature/todo ブランチを作成して切り替える",
+      "checks": [
+        { "predicate": "currentBranchIs", "args": ["feature/todo"] }
+      ],
+      "hints": [
+        "1. まず 'git branch feature/todo' でブランチを作成",
+        "2. 次に 'git checkout feature/todo' で切り替え",
+        "3. または 'git checkout -b feature/todo' で作成と切り替えを同時実行"
+      ],
+      "explain": "ブランチを作成しただけでは、ワークツリーは変わりません。checkout でブランチを切り替えると、HEADが移動し、ワークツリーがそのブランチの内容に更新されます。",
+      "preStep": {
+        "message": "これからブランチを作成し、ワークツリーとの関係を確認します",
+        "tips": [
+          "ブランチは単なるコミットへのポインタです",
+          "ワークツリーは常に1つのブランチを指しています",
+          "切り替え前後でワークツリーの内容を比較してみましょう"
+        ]
+      }
+    },
+    {
+      "goal": "README.md に1行追記してコミットする（未コミット変更が残らないこと）",
+      "checks": [
+        { "predicate": "noUncommittedChanges", "args": [] }
+      ],
+      "hints": [
+        "1. README.md を編集（例: Add-Content README.md '追記内容'）",
+        "2. 'git status' で変更を確認",
+        "3. 'git add README.md' でステージング",
+        "4. 'git commit -m \"メッセージ\"' でコミット"
+      ],
+      "explain": "ファイルを編集するとワークツリーが変更されます。git add でステージングエリアに追加し、git commit で現在のブランチ（feature/todo）に保存されます。",
+      "preStep": {
+        "message": "ワークツリーでファイルを編集し、ブランチに保存するプロセスを体験します",
+        "tips": [
+          "編集 → ワークツリーが変更される",
+          "git add → ステージングエリアに追加される",
+          "git commit → ブランチに永続的に保存される"
+        ]
+      }
+    },
+    {
+      "goal": "main ブランチに切り替えて feature/todo をマージする",
+      "checks": [
+        { "predicate": "isMerged", "args": ["main", "feature/todo"] }
+      ],
+      "hints": [
+        "1. 'git checkout main' でmainブランチに切り替え",
+        "2. ワークツリーの内容がmainブランチの内容に変わることを確認",
+        "3. 'git merge feature/todo' でマージ実行"
+      ],
+      "explain": "mainブランチに切り替えると、ワークツリーの内容がmainブランチの最新コミットに戻ります。マージにより、feature/todoの変更がmainに統合されます。",
+      "preStep": {
+        "message": "ブランチを切り替えてワークツリーの変化を観察し、マージを実行します",
+        "tips": [
+          "checkout main → ワークツリーがmainの内容に変わる",
+          "merge → 2つのブランチの変更を統合する",
+          "Fast-forward → 単純にブランチポインタを進める"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "keyPoints": [
+      "ワークツリーは現在のブランチの内容を物理的に表示する",
+      "ブランチ切り替えでワークツリーの内容が変わる", 
+      "変更はワークツリー → ステージング → ブランチの順で保存される",
+      "マージにより複数のブランチの変更を統合できる"
+    ],
+    "nextSteps": [
+      "コンフリクトが発生するマージの体験",
+      "リベースによる履歴の整理",
+      "スタッシュによる作業の一時保存"
+    ]
+  }
+}
