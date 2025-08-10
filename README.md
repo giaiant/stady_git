@@ -251,12 +251,12 @@ C:\dev\stady_git\tools\git-dojo\.sandbox\repo
 **システムが自動実行するコマンド：**
 ```powershell
 # 以下は内部的に自動実行される（手動実行不要）
-echo 'メインブランチの内容です' > main-file.txt
+echo "メインブランチの内容です" > main-file.txt
 git add main-file.txt
-git commit -m 'main: 初期ファイル作成'
-echo '共通ファイルの初期内容' > shared-file.txt
+git commit -m "main: 初期ファイル作成"
+echo "共通ファイルの初期内容" > shared-file.txt
 git add shared-file.txt
-git commit -m 'main: 共通ファイル作成'
+git commit -m "main: 共通ファイル作成"
 ```
 
 **正しい開始手順：**

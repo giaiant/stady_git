@@ -23,7 +23,12 @@ async function startScenario(scenarioId) {
     
     for (const command of scenario.initial_setup.commands) {
       try {
-        execSync(command, { cwd: sandboxRepo, stdio: 'pipe' });
+        execSync(command, { 
+          cwd: sandboxRepo, 
+          stdio: 'pipe',
+          shell: 'powershell.exe',
+          encoding: 'utf8'
+        });
         console.log(chalk.gray(`   ✓ ${command}`));
       } catch (error) {
         console.log(chalk.red(`   ❌ エラー: ${command}`));

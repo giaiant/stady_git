@@ -10,12 +10,12 @@
   ],
   "initial_setup": {
     "commands": [
-      "echo 'メインブランチの内容です' > main-file.txt",
+      "echo \"メインブランチの内容です\" > main-file.txt",
       "git add main-file.txt",
-      "git commit -m 'main: 初期ファイル作成'",
-      "echo '共通ファイルの初期内容' > shared-file.txt", 
+      "git commit -m \"main: 初期ファイル作成\"",
+      "echo \"共通ファイルの初期内容\" > shared-file.txt", 
       "git add shared-file.txt",
-      "git commit -m 'main: 共通ファイル作成'"
+      "git commit -m \"main: 共通ファイル作成\""
     ]
   },
   "steps": [
