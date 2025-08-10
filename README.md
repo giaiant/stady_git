@@ -264,13 +264,18 @@ git commit -m 'main: 共通ファイル作成'
 # 1. Git Dojo ディレクトリに移動
 cd C:\dev\stady_git\tools\git-dojo
 
-# 2. シナリオを開始（自動セットアップが実行される）
+# 2. 古いサンドボックスをクリア（もしあれば）
+Remove-Item -Recurse -Force .sandbox -ErrorAction SilentlyContinue
+
+# 3. シナリオを開始（サンドボックス初期化と自動セットアップが実行される）
 node bin/git-dojo.js start -s worktree-vs-branch
 
-# 3. 別ターミナルで自動作成されたサンドボックスに移動
+# 4. 別ターミナルで自動作成されたサンドボックスに移動
 cd C:\dev\stady_git\tools\git-dojo\.sandbox\repo
 
-# 4. ここから7ステップを開始
+# 5. 初期ファイルが作成されていることを確認
+Get-ChildItem
+# → main-file.txt と shared-file.txt が表示されるはず
 ```
 
 **ステップ1: 🔍 現在のワークツリーを観察**
